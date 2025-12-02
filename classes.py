@@ -1,13 +1,33 @@
+from dataclasses import dataclass
+
+def reminder_id():
+    n = 1
+    while True:
+        yield n
+        n += 1
+
+reminder_id = reminder_id()
+
+@dataclass
 class Reminder:
-    pass
+    title: str
+    time: str
 
-
+@dataclass
 class SimpleReminder(Reminder):
-    pass
+    unique_id: int = next(reminder_id)
 
+
+@dataclass
 class MeetingReminder(Reminder):
-    pass
+    participants: list[str]
+    unique_id: int = next(reminder_id)
 
+
+
+@dataclass
 class DailyRoutineReminder(Reminder):
-    pass
+    repeater: bool
+    unique_id: int = next(reminder_id)
+
 

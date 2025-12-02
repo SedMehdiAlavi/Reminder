@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
+from datetime import datetime
+
 
 def reminder_id():
     n = 1
@@ -25,7 +27,8 @@ class SimpleReminder(Reminder):
 
     @abstractmethod
     def remind(self):
-        pass
+        if self.time == datetime.now().time():
+            print(f"{self.time} - {self.title}")
 
 
 @dataclass
@@ -35,7 +38,8 @@ class MeetingReminder(Reminder):
 
     @abstractmethod
     def remind(self):
-        pass
+        if self.time == datetime.now().time():
+            print(f"meeting: {self.time} - {self.title} with\n{self.participants}")
 
 
 @dataclass
@@ -45,5 +49,5 @@ class DailyRoutineReminder(Reminder):
 
     @abstractmethod
     def remind(self):
-        pass
-
+        if self.time == datetime.now().time() and self.repeater:
+            print(f"daily: {self.time} - {self.title}")

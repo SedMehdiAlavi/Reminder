@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from datetime import datetime
 
@@ -15,6 +15,7 @@ reminder_id = reminder_id()
 class Reminder(ABC):
     title: str
     time: str
+    reminder_id: int = field(init=False, default=next(reminder_id))
 
     @abstractmethod
     def remind(self):
@@ -23,31 +24,25 @@ class Reminder(ABC):
 
 @dataclass
 class SimpleReminder(Reminder):
-    unique_id: int = next(reminder_id)
 
-    @abstractmethod
     def remind(self):
         if self.time == datetime.now().time():
-            print(f"{self.time} - {self.title}")
+            print(f"It's {self.time} : {self.title}")
 
 
 @dataclass
 class MeetingReminder(Reminder):
     participants: list[str]
-    unique_id: int = next(reminder_id)
 
-    @abstractmethod
     def remind(self):
         if self.time == datetime.now().time():
-            print(f"meeting: {self.time} - {self.title} with\n{self.participants}")
+            print(f"Meeting Reminder: {self.time} - {self.title} with\n{self.participants}")
 
 
 @dataclass
 class DailyRoutineReminder(Reminder):
     repeater: bool
-    unique_id: int = next(reminder_id)
 
-    @abstractmethod
     def remind(self):
         if self.time == datetime.now().time() and self.repeater:
-            print(f"daily: {self.time} - {self.title}")
+            print(f"Daily Routine: {self.time} - {self.title}")

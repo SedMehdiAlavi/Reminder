@@ -39,7 +39,13 @@ class MeetingReminder(Reminder):
 
 @dataclass
 class DailyRoutineReminder(Reminder):
-    repeater: bool
+    repeater: bool = field(init=False, default=False)
+
+    def activate(self):
+        self.repeater = True
+
+    def deactivate(self):
+        self.repeater = False
 
     def remind(self):
         status = "active" if self.repeater else "inactive"

@@ -22,7 +22,7 @@ class ReminderManager:
 
     def add_reminder(self, reminder):
         if not reminder.title or not reminder.time:
-            logger.error(f"{reminder.reminder_id} has no title or time.")
+            logger.error(f"Reminder {reminder.reminder_id} has no title or time.")
             return
 
         self.reminders.append(reminder)
@@ -34,7 +34,8 @@ class ReminderManager:
         logger.warning(f"Reminder {reminder_id} removed.")
 
     def list_reminders(self):
-        return [f"{r.reminder_id}: {r.title} @ {r.time}" for r in self.reminders]
+        for r in self.reminders:
+            print(f"{r.reminder_id}: {r.title} @ {r.time}")
 
     def reminder_group(self, group_by="type"):
         groups = {}
@@ -48,7 +49,7 @@ class ReminderManager:
             if key is not None:
                 groups.setdefault(key, []).append(reminder)
 
-        return groups
+        print(groups)
 
     def execute_all(self):
         for reminder in self.reminders:
@@ -60,5 +61,9 @@ class ReminderManager:
             except Exception as e:
                 logger.error(f"Error executing reminder {reminder.reminder_id}: {e}")
 
-    def find_by_id(self, reminder):
-        return next((r for r in self.reminders if r.reminder_id == reminder_id), None)
+    def find_by_id(self, reminder_id):
+        for r in self.reminders:
+            if r.reminder_id == reminder_id:
+                print(f"{r.reminder_id}: {r.title} @ {r.time}")
+                return
+        print(f"reminder with Id '{reminder_id}' not found")

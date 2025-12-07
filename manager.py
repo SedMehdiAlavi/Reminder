@@ -24,6 +24,7 @@ class ReminderManager:
             file = open(self.storage, "r")
             data = json.load(file)
             for r in data:
+                r.pop("reminder_id", None)
                 if "participants" in r:
                     self.reminders.append(MeetingReminder(**r))
 

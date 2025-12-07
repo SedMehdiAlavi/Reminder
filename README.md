@@ -93,8 +93,24 @@ Daily Routine: 07:00 - Workout (repeat daily: active)
 ---
 
 ## 🏷 Releases
+
 - **v1.0.0**  
-  - Complete implementation of core features (three reminder types, ReminderManager, logging with rotation, CLI).  
+  - Initial implementation of core features:  
+    - Three reminder types (Simple, Meeting, DailyRoutine)  
+    - ReminderManager with add/remove/list/execute/search/group  
+    - Logging with rotation (`reminder.log`)  
+    - Basic CLI interface  
+
+- **v2.0.0**  
+  - **Persistent Storage (JSON-based)**  
+    - Reminders are now saved to a local JSON file (`reminders.json`).  
+    - When the program restarts, all previously created reminders are automatically reloaded.  
+    - This ensures reminders survive between program runs and makes the tool usable in daily life.  
+
+  - **Desktop Notification Adapter**  
+    - In addition to console output, reminders now trigger native desktop notifications.  
+    - Users receive real-time pop-up alerts for their reminders, improving visibility and usability.  
+    - Implemented using the `plyer` library for cross-platform support.  
 
 ---
 

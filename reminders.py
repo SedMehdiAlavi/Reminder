@@ -15,7 +15,7 @@ reminder_id = reminder_id()
 class Reminder(ABC):
     title: str
     time: str
-    reminder_id: int = field(init=False, default_factory=lambda: next(reminder_id))
+    reminder_id: int = field(default_factory=lambda: next(reminder_id))
 
     @abstractmethod
     def remind(self):
@@ -31,7 +31,7 @@ class SimpleReminder(Reminder):
 
 @dataclass
 class MeetingReminder(Reminder):
-    participants: list[str]
+    participants: list[str] = field(default_factory=list)
 
     def remind(self):
         return f"Meeting Reminder: {self.time} - {self.title} with\n{self.participants}"

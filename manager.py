@@ -1,9 +1,44 @@
 from logger import setup_logging
+from reminders import *
 logger = setup_logging()
+import json
+from plyer import notification
 
 class ReminderManager:
     def __init__(self):
         self.reminders = []
+        self.storage = "reminders.json"
+        self.load_reminders()
+
+    def save_reminders(self):
+        try:
+            file = open(self.storage, "w", encoding="utf-8")
+            json.dump([r.__dict__ for r in self.reminders], file, indent=4)
+            file.close()
+            logger.debug("Reminders saved to storage")
+        except Exception as e:
+            logger.error(f"Failed to save reminders: {e}")
+
+    def load_reminders(self):
+        try:
+            file = open(self.storage, "r")
+            data = json.load(file)
+            for r in data:
+                if "participants" in r:
+                    self.reminders.append(MeetingReminder(**r))
+
+                elif "repeater" in r:
+                    self.reminders.append(DailyRoutineReminder(**r))
+
+                else:
+                    self.reminders.append(SimpleReminder(**r))
+            file.close()
+            logger.debug("Reminders loaded from storage")
+        except FileNotFoundError:
+            logger.info("No existing storage file found. Starting fresh.")
+
+        except Exception as e:
+            logger.error(f"Failed to load reminders: {e}")
 
     def add_reminder(self, reminder):
         if not reminder.title or not reminder.time:
@@ -11,11 +46,13 @@ class ReminderManager:
             return
 
         self.reminders.append(reminder)
+        self.save_reminders()
         logger.info(f"Added reminder {reminder.reminder_id} - {reminder.title}")
 
 
     def remove_reminder(self, reminder_id):
         self.reminders = [r for r in self.reminders if r.reminder_id != int(reminder_id)]
+        self.save_reminders()
         logger.warning(f"Reminder {reminder_id} removed.")
 
     def list_reminders(self):
@@ -45,6 +82,11 @@ class ReminderManager:
             try:
                 msg = reminder.remind()
                 print(msg)
+                notification.notify(
+                    title="Reminder",
+                    message=msg,
+                    timeout=5
+                )
                 logger.info(f"Reminder {reminder.reminder_id} executed: {msg}")
 
             except Exception as e:

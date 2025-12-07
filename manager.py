@@ -1,3 +1,5 @@
+from logger import setup_logging
+logger = setup_logging()
 
 class ReminderManager:
     def __init__(self):
@@ -19,6 +21,7 @@ class ReminderManager:
     def list_reminders(self):
         for r in self.reminders:
             print(f"{r.reminder_id}: {r.title} @ {r.time}")
+        logger.debug("reminders listed.")
 
     def reminder_group(self, group_by="type"):
         groups = {}
@@ -31,11 +34,11 @@ class ReminderManager:
             if key is not None:
                 groups.setdefault(key, []).append(reminder.__dict__)
 
-        # print(groups)
         for k, v in groups.items():
             print(k)
             for r in v:
                 print(r)
+        logger.debug(f"reminders grouped by {group_by}.")
 
     def execute_all(self):
         for reminder in self.reminders:
@@ -53,3 +56,4 @@ class ReminderManager:
                 print(f"{r.reminder_id}: {r.title} @ {r.time}")
                 return
         print(f"reminder with Id '{reminder_id}' not found")
+        logger.debug("reminder searched by id.")

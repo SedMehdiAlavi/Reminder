@@ -13,9 +13,10 @@ def setup_logging():
     logger.addHandler(stream)
 
     file_handler = RotatingFileHandler(
-        "reminder.log",
+        filename="reminder.log",
+        mode="a",
         maxBytes=100*1024,
-        backupCount=5,
+        backupCount=10,
         encoding="utf-8"
     )
     file_handler.setLevel(logging.DEBUG)

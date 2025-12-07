@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
-from datetime import datetime
 
 
 def reminder_id():
@@ -16,7 +15,7 @@ reminder_id = reminder_id()
 class Reminder(ABC):
     title: str
     time: str
-    reminder_id: int = field(init=False, default_factory=next(reminder_id))
+    reminder_id: int = field(init=False, default_factory=lambda: next(reminder_id))
 
     @abstractmethod
     def remind(self):

@@ -1,10 +1,20 @@
 from reminders import *
 import logging
+from logging.handlers import RotatingFileHandler
 
-logging.basicConfig(level=logging.INFO,
-                    filename='reminder.log',
-                    filemode='a',
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger("ReminderManager")
+logger.setLevel(logging.INFO)
+
+handler = RotatingFileHandler(
+    filename="reminder.log",
+    mode="a",
+    maxBytes=100 * 1024,
+    backupCount=3,
+    encoding="utf-8"
+)
+
+formatter = logging.Formatter("%(levelname)s - %(message)s")
+handler.setFormatter(formatter)
 
 class ReminderManager:
     def __init__(self):
@@ -12,16 +22,16 @@ class ReminderManager:
 
     def add_reminder(self, reminder):
         if not reminder.title or not reminder.time:
-            logging.error(f"{reminder.reminder_id} has no title or time.")
+            logger.error(f"{reminder.reminder_id} has no title or time.")
             return
 
         self.reminders.append(reminder)
-        logging.info(f"Added reminder {reminder.reminder_id} - {reminder.title}")
+        logger.info(f"Added reminder {reminder.reminder_id} - {reminder.title}")
 
 
     def remove_reminder(self, reminder_id):
         self.reminders = [r for r in self.reminders if r.reminder_id != reminder_id]
-        logging.warning(f"Reminder {reminder_id} removed.")
+        logger.warning(f"Reminder {reminder_id} removed.")
 
     def list_reminders(self):
         return [f"{r.reminder_id}: {r.title} @ {r.time}" for r in self.reminders]
@@ -45,10 +55,10 @@ class ReminderManager:
             try:
                 msg = reminder.remind()
                 print(msg)
-                logging.info(f"Reminder {reminder.reminder_id} executed: {msg}")
+                logger.info(f"Reminder {reminder.reminder_id} executed: {msg}")
 
             except Exception as e:
-                logging.error(f"Error executing reminder {reminder.reminder_id}: {e}")
+                logger.error(f"Error executing reminder {reminder.reminder_id}: {e}")
 
     def find_by_id(self, reminder):
         return next((r for r in self.reminders if r.reminder_id == reminder_id), None)

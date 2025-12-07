@@ -10,7 +10,7 @@ while True:
         "2. Remove Reminder\n"
         "3. Show Reminders List\n"
         "4. Execute All Reminders\n"
-        "5. Search by ID6\n"
+        "5. Search by ID\n"
         "6. Group Reminders\n"
         "0. Exit\n"
     )
@@ -58,11 +58,13 @@ while True:
         continue
 
     elif start == "5":
-        manager.find_by_id(input("Reminder ID:\n"))
+        rid = input("Reminder ID:\n")
+        manager.find_by_id(rid)
         continue
 
     elif start == "6":
-        manager.reminder_group(input("Group Reminders by (type|time|category):\n"))
+        gp = input("Group Reminders by (type|time):\n")
+        manager.reminder_group(gp)
         continue
 
     elif start == "0":

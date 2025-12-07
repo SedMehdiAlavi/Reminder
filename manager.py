@@ -1,20 +1,3 @@
-from reminders import *
-import logging
-from logging.handlers import RotatingFileHandler
-
-logger = logging.getLogger("ReminderManager")
-logger.setLevel(logging.INFO)
-
-handler = RotatingFileHandler(
-    filename="reminder.log",
-    mode="a",
-    maxBytes=100 * 1024,
-    backupCount=3,
-    encoding="utf-8"
-)
-
-formatter = logging.Formatter("%(levelname)s - %(message)s")
-handler.setFormatter(formatter)
 
 class ReminderManager:
     def __init__(self):
@@ -30,7 +13,7 @@ class ReminderManager:
 
 
     def remove_reminder(self, reminder_id):
-        self.reminders = [r for r in self.reminders if r.reminder_id != reminder_id]
+        self.reminders = [r for r in self.reminders if r.reminder_id != int(reminder_id)]
         logger.warning(f"Reminder {reminder_id} removed.")
 
     def list_reminders(self):
@@ -43,13 +26,16 @@ class ReminderManager:
             key = (
                 type(reminder).__name__ if group_by == "type"
                 else reminder.time if group_by == "time"
-                else reminder.category if group_by == "category"
                 else None
             )
             if key is not None:
-                groups.setdefault(key, []).append(reminder)
+                groups.setdefault(key, []).append(reminder.__dict__)
 
-        print(groups)
+        # print(groups)
+        for k, v in groups.items():
+            print(k)
+            for r in v:
+                print(r)
 
     def execute_all(self):
         for reminder in self.reminders:
@@ -63,7 +49,7 @@ class ReminderManager:
 
     def find_by_id(self, reminder_id):
         for r in self.reminders:
-            if r.reminder_id == reminder_id:
+            if r.reminder_id == int(reminder_id):
                 print(f"{r.reminder_id}: {r.title} @ {r.time}")
                 return
         print(f"reminder with Id '{reminder_id}' not found")

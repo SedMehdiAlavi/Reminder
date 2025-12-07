@@ -11,11 +11,12 @@ def reminder_id():
 
 reminder_id = reminder_id()
 
+
 @dataclass
 class Reminder(ABC):
     title: str
     time: str
-    reminder_id: int = field(init=False, default=next(reminder_id))
+    reminder_id: int = field(init=False, default_factory=next(reminder_id))
 
     @abstractmethod
     def remind(self):
@@ -26,8 +27,7 @@ class Reminder(ABC):
 class SimpleReminder(Reminder):
 
     def remind(self):
-        if self.time == datetime.now().time():
-            print(f"It's {self.time} : {self.title}")
+        return f"It's {self.time} : {self.title}"
 
 
 @dataclass
@@ -35,8 +35,7 @@ class MeetingReminder(Reminder):
     participants: list[str]
 
     def remind(self):
-        if self.time == datetime.now().time():
-            print(f"Meeting Reminder: {self.time} - {self.title} with\n{self.participants}")
+        return f"Meeting Reminder: {self.time} - {self.title} with\n{self.participants}"
 
 
 @dataclass
@@ -44,5 +43,5 @@ class DailyRoutineReminder(Reminder):
     repeater: bool
 
     def remind(self):
-        if self.time == datetime.now().time() and self.repeater:
-            print(f"Daily Routine: {self.time} - {self.title}")
+        status = "active" if self.repeater else "inactive"
+        return f"Daily Routine: {self.time} - {self.title} (repeat daily: {status})"
